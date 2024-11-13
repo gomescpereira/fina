@@ -1,0 +1,59 @@
+import { ArrowRight } from 'lucide-react';
+import react from '../assets/react.svg';
+import {  useNavigate } from 'react-router-dom';
+import { useCategoryMutate } from "../hooks/useCategoryMutate";
+import { Category } from '../Model/Category';
+//import { useQuery } from '@tanstack/react-query';
+
+export function CreateCategory() {
+
+    const { mutate, isSuccess } = useCategoryMutate();
+
+    const navigate = useNavigate()
+
+    function handleCreateCategory() {
+
+        console.log("entrou aqui");
+        const data: Category = {
+            title: "caderno",
+            description: "teste"
+            
+        }
+        mutate(data)
+        navigate('/category/');
+
+    }
+    return (
+        <main className="h-screen flex items-center justify-center px-4">
+          <div className="flex-col items-center justify-center gap-6">
+          
+           {/* <img src={react} alt="AMA" className="h-10"/> */}
+           <form onSubmit={handleCreateCategory} className="flex flex-col items-center justify-center w-full max-w-xs gap-4 bg-zinc-900 p-2 rounded-xl border border-zinc-800 focus-within:border-orange-400">
+            <input
+             type="text"
+             name="title"
+             autoComplete='off'
+             placeholder='Nome da Categoria'
+             className="space-y-2 text-sm bg-transparent mx-2 outline-none text-zinc-100 placeholder:text-zinc-500 gap-1"
+            />
+            <input
+             type="text"
+             name="description"
+             autoComplete='off'
+             placeholder='Descrição da Categoria'
+             className="space-y-2 text-sm bg-transparent mx-2 outline-none text-zinc-100 placeholder:text-zinc-500"
+            />
+            
+            <button type="submit" className="bg-orange-400 text-orange-950 px-3 py-1.5 gap-1.5 flex items-center rounded-lg font-medium text-sm transition-colors hover:bg-orange-500">
+                Criar categoria
+                <ArrowRight className="size-4 " />
+            </button>
+                
+           </form>
+          </div>
+
+        </main>
+      
+      
+    )
+} 
