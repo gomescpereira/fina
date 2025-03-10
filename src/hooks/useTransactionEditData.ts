@@ -14,6 +14,7 @@ type Transaction = {
   amount: number;
   consumer: number;
   category_id: string;
+  pay: boolean;
   paidOrReceivedAt: Date;
 };
 
@@ -36,7 +37,7 @@ const fetchData = async (
     
         const { data: data } = await response.json();
         
-        console.log('Dados:', data);
+        console.log('Hook traz Dados de edição:', { data });
         return data;
 
       } catch (error) {
@@ -50,10 +51,11 @@ const fetchData = async (
 
   
 
-  export function useTransactionEditData(id: string) {
+  export function useTransactionEditData(id: string ) {
       const query = useQuery<Transaction>({
-        queryKey: ['get-edit-transacoes', id ],
         queryFn: () => fetchData(id) , 
+        queryKey: ['get-edit-transacoes', id ],
+       
         
         refetchInterval: 60 * 5 * 1000
       })

@@ -2,13 +2,19 @@
 //import { Category } from './../Model/Category';
 import { useMutation } from "@tanstack/react-query";
 
-export interface Category {
-    id: string;
-    title: string
-    description: string
-    
 
-  }
+
+type Transaction = {
+    id: string;
+    title: string;
+    type: number; 
+    amount: number;
+    consumer: number;
+    category_id: string;
+    pay: boolean;
+    paidOrReceivedAt: Date;
+  };
+   
 
 
  const API_URL = 'http://localhost:5250/v1';
@@ -19,20 +25,25 @@ export interface Category {
 //  }
 
   
-  const upData = async({ id ,title, description}: Category) => {
-    return await fetch(API_URL + `/categories/´${id}` , {
-         method: 'UPDATE',
+  const upData = async({ id ,title, type, category_id, amount,paidOrReceivedAt, pay}: Transaction) => {
+    return await fetch(API_URL + `/transactions/${id}` , {
+         method: 'PUT',
          headers: {
              'Accept': 'application/json, text/plain',
              'Content-Type': 'application/json;charset=UTF-8'
          },
          body: JSON.stringify({
-            id,
             title,
-            description,
+            type,
+            category_id,
+            amount,
+            pay,
+            paidOrReceivedAt,
          }),
      })
    }
+
+  
 
 
  export  function useCategoryUpMutate(){

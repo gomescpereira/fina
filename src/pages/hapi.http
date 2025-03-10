@@ -23,3 +23,16 @@ POST  http://localhost:5250/v1/transactions
     "categoryId": 4,
    "paidOrReceivedAt": "2024-09-19T13:36:23.614Z"
  }
+
+###
+GET  http://localhost:3333/currency
+Content-Type: application/json
+
+###
+GET  http://localhost:5250/v1/reports/expenses
+Content-Type: application/json
+
+###
+GET  http://localhost:5250/v1/transactions?pageNumber=1&pageSize=5
+
+Content-Type: application/json

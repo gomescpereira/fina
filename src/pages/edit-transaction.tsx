@@ -1,19 +1,16 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { Header } from '../Components/header';
 import { Tabs } from '../Components/tabs';
-//import { Transaction } from '../Model/Transaction'
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../Components/ui/select";
 import { Label } from "../Components/ui/label";
-//TagResponse,
-//import { useState } from "react";
 import { zodResolver} from '@hookform/resolvers/zod';
-//import { usetransactionUpMutate } from "../hooks/usetransactionUpMutate";
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTransactionEditData } from "../hooks/useTransactionEditData";
 import { Carregando } from "../Components/carregando";
-//import { DesktopIcon } from "@radix-ui/react-icons";
+import { useCategoryData } from "../hooks/useCategoryData";
+
 
 
 const createTransactionFormSchema = z.object({
@@ -32,84 +29,46 @@ type CreateTransactionFormData = z.infer<typeof createTransactionFormSchema>
 
 export function EditTransaction() {
     const paramms = useParams(); 
-    const id = paramms.transactionid;
+    const id = paramms?.transactionid;
 
     //const [transactions, setTransaction] = useState<Transaction>({})
     //console.log(id)
-
+    const {data: tagsCaterories} = useCategoryData();
+    
     
     const navigate = useNavigate();
 
     const queryClient = useQueryClient()
 
+    // const url = `http://localhost:5250/v1/transactions/${id}`;
+    const API_URL = 'http://localhost:5250/v1';
 
-    // const [transacao, setTransaction] = useState<Transaction>();
-    const url = 'http://localhost:5250/v1/transactions/'+ id;
 
-  //  (typeof id !== "string") ? {
-  //     return navigate('/transaction')
-  //   }  
 
     const {data: transactionResponse, isLoading}= useTransactionEditData(id);
    
-   console.log("Novo", {transactionResponse})
-
-
-    // const fetchDataWithDateParams = async () => {
-    //   try {
-    //     const response = await fetch(url);
-    //     //`http://localhost:5250/v1/transactions/${id}`
-        
-    //     if (!response.ok) {
-    //       throw new Error('Erro na requisição');
-    //     }
-    
-    //     const data = await response.json();
-    //     setTransaction(data.data);
-    //     //console.log('Dados:', data);
-    //     return data;
-    //   } catch (error) {
-    //     console.error('Erro na requisição:', error);
-    //     throw error;
-    //   }
-    // };
-    
-
-    // const upData = async({ title, description}: transaction ) => {
-    //     return await fetch(url  , {
-    //          method: 'UPDATE',
-    //          headers: {
-    //              'Accept': 'application/json, text/plain',
-    //              'Content-Type': 'application/json;charset=UTF-8'
-    //          },
-    //          body: JSON.stringify({
-    //             title,
-    //             description,
-    //          }),
-    //      })
-    //    }
+    console.log("Recebeu estes Dados", {transactionResponse})
+   
 
     const { mutateAsync } = useMutation({
       mutationFn: async (transaction: CreateTransactionFormData) => {
         // delay 2s
         //await new Promise(resolve => setTimeout(resolve, 2000))
-  
-        await fetch(url, {
+        console.log("Enviando estes Dados",{transaction});
+        await fetch( API_URL + `/transactions/${id}`, {
           method: 'PUT',
           headers: {
-           'Accept': 'application/json, text/plain',
+           'Accept': 'application/json',
            'Content-Type': 'application/json;charset=UTF-8'
           },
           body: JSON.stringify({
             title: transaction.title,
+            type: transaction.tipo,
+            categoryId: transaction.category_Id,
             amount: transaction.amount,
-            // data.title ='';
-            tipo: transaction.tipo,
-            category_Id: transaction.category_Id,
             consumer: transaction.consumer,
-            pay: transaction.pay,
             paidOrReceivedAt: transaction.paidOrReceivedAt,
-
+            pay: transaction.pay,
 
           }),
         })
@@ -129,30 +88,13 @@ export function EditTransaction() {
         resolver: zodResolver(createTransactionFormSchema),
       });
 
-    //register.bind(createtransactionFormData.title) = transaction?.title;  
-     
-    
-    
-    
-       //const { mutate } = usetransactionUpMutate()
-       //const navigate = useNavigate();
-      
-      
-        async function edittransaction(data: CreateTransactionFormData) {
+        
+    async function edittransaction(data: CreateTransactionFormData) {
           //setOutput(JSON.stringify(data, null, 2));
           //data?.id = transacao.id;
-          console.log(data);
+          console.log("Editar", {data});
           await mutateAsync(data)
-          
-        //   //await upData({data?.title, data?.description });
-          
-        
-          
-
-          //mutate(data);
-          // if(mutate)
-          //if(isSuccess) 
-          navigate('/transaction')
+           navigate('/transaction')
     }
 
     if (isLoading) {
@@ -174,7 +116,7 @@ export function EditTransaction() {
                   />
                   
          
-           {/* {errors.title && <span>{ errors.title.message }</span>} */}
+        
            </div>
 
            {/* {transactionResponse?.category_id === 4 ? sim" : "não"}  */}
@@ -185,7 +127,6 @@ export function EditTransaction() {
             className="border border-zinc-600 shadow-sm rounded h-10 px-3  bg-zinc-900 text-white"
             {...register('consumer')} defaultValue={transactionResponse?.consumer} type="text"
           />
-          {/* {errors.title && <span>{ errors.title.message }</span>} */}
         </div>
 
 
@@ -215,43 +156,32 @@ export function EditTransaction() {
           />
         </div>
 
-        <div className="flex flex-col gap-1">
-          {/* <label htmlFor="title">title</label> */}
-          <label>Categoria</label>
-          <input
-            className="border border-zinc-600 shadow-sm rounded h-10 px-3  bg-zinc-900 text-white"
-            {...register('category_Id')}  type="text" defaultValue={transactionResponse?.category_id}
-          />
-          {/* {errors.title && <span>{ errors.title.message }</span>} */}
-        </div>
-        {/* <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           <Controller
            control={control}
            name="category_Id"
            render={({ field }) => {
             return (
               <>
-
               <Label>Categorias</Label>
               <Select onValueChange={field.onChange}  >
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione a Categoria" />
                 </SelectTrigger>
                 <SelectContent className='bg-orange-500 text-black'>
-                   {tagsResponse?.data.map((categoria) => (
+                   {tagsCaterories?.data.map((categoria) => (
                      <SelectItem key={categoria.id} value={categoria?.id.toString()}>
                        {categoria.title}
                      </SelectItem>
                   ))}
-                 
-                {</SelectContent>
+               
+                </SelectContent>
               </Select>
               </>
             )
            }}
-
           />
-        </div> */}
+        </div>
 
 
         <div className="flex flex-col gap-1">
@@ -274,6 +204,7 @@ export function EditTransaction() {
           />
           {/* {errors.description && <span>{ errors.description.message }</span>} */}
         </div>
+
         <div className="flex flex-col gap-1">
             <label htmlFor="status">Pagar</label>
             <input

@@ -13,6 +13,7 @@ type Transaction = {
   type: number; 
   amount: number;
   consumer: number;
+  pay: boolean;
   category_id: string;
   paidOrReceivedAt: Date;
 };
@@ -30,11 +31,15 @@ interface TagResponse {
 
 const fetchData = async (
       dataInicial: string,
-      dataFinal: string
+      dataFinal: string,
+      page?: number,
+      pagesize?: number
     ): Promise<TagResponse> => {
+      
+     
       try {
         const response = await fetch(
-          API_URL+ `/transactions?startDate=${dataInicial}&endDate=${dataFinal}&pageNumber=1&pageSize=15`
+          API_URL+ `/transactions?startDate=${dataInicial}&endDate=${dataFinal}&pageNumber=${page}&pageSize=10`
         );
     
         if (!response.ok) {
@@ -42,7 +47,7 @@ const fetchData = async (
         }
     
         const  data  : TagResponse = await response.json();
-        
+        console.log(dataInicial, dataFinal, page, pagesize);
         console.log('Dados:', data);
         return data;
 
@@ -50,6 +55,8 @@ const fetchData = async (
         console.error('Erro na requisição:', error);
         throw error;
       }
+      
+   
     };
 
 
@@ -67,13 +74,16 @@ const fetchData = async (
 
   
 
-  export function useTransactionData(dataInicial: string, dataFinal: string) {
+  export function useTransactionData(dataInicial: string, dataFinal: string, page: number) {
+         
       const query = useQuery<TagResponse>({
-        queryKey: ['get-transacoes', dataInicial , dataFinal ],
-        queryFn: () => fetchData(dataInicial,dataFinal) , 
+        queryKey: ['get-transacoes', dataInicial , dataFinal, page ],
+        queryFn: () => fetchData(dataInicial,dataFinal, page) , 
         
-        refetchInterval: 60 * 5 * 1000
+        refetchInterval: 60 * 5 * 1000,
+          
       })
-
+     
      return query;
+
   }
