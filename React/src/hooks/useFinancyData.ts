@@ -14,8 +14,8 @@ export interface TagResponse {
  eurSell: number;
 }
 
-const API_URL = 'http://localhost:3333';
-
+//const API_URL = 'http://localhost:3333';
+const API_URL = 'http://192.168.0.20:8080/v1';
 
 
 const fetchData = async () => {

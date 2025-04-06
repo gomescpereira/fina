@@ -41,7 +41,7 @@ export function EditTransaction() {
     const queryClient = useQueryClient()
 
     // const url = `http://localhost:5250/v1/transactions/${id}`;
-    const API_URL = 'http://localhost:5250/v1';
+    const API_URL = 'http://192.168.0.20:8080/v1';
 
 
 

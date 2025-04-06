@@ -9,7 +9,8 @@ export interface Category {
   }
 
 
- const API_URL = 'http://localhost:5250/v1';
+// const API_URL = 'http://192.168.0.20:8080/v1';
+const API_URL = 'http://192.168.0.20:8080/v1';
 
 // Usando o Axios
 //  const postData = async (data: Category) => {
