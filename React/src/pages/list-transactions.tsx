@@ -11,14 +11,15 @@ import {  useNavigate, useSearchParams } from 'react-router-dom';
 import { Pencil, Trash } from 'lucide-react';
 //import {   Transaction, TagResponse } from '../Model/Transaction';
 //ParamTransaction
-// import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { useTransactionData } from '../hooks/useTransactionData';
+import MonthSelect from './components/MonthSelect';
 
 
 import { Carregando } from '../Components/carregando';
 import { getmonthDateRange } from '../utils/get-month-date-rangre';
  import { useTransactionDeleteMutate } from '../hooks/useTransactionDeleteMutate';
-import { Combo } from '../Components/ui/combo';
+//import { Combo } from '../Components/ui/combo';
 
 
 type Transaction = {
@@ -46,6 +47,7 @@ export interface TagResponse {
 //const API_URL = 'http://192.168.0.20:8080/v1';
 
 export function ListTransactions() {
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>();
 
   const [searchParams] = useSearchParams();
 
@@ -54,11 +56,29 @@ export function ListTransactions() {
 
   //const [transactions, setTransactions] = useState<Transaction[]>([]);
 
+  const handleMonthChange = (value: string) => {
+    setSelectedMonth(value);
+    console.log(`Mês selecionado: ${value}`);
+  };
+
+
+
   
   const date  = new Date();
 
-  const currentMonth = date.getMonth() +1;
-
+  // const currentMonth = date.getMonth() +1;
+   const currentMonth = selectMonth;
+  <div className="p-8">
+      <h1>Selecione um mês</h1>
+      <MonthSelect 
+        onValueChange={handleMonthChange}
+        defaultValue={selectedMonth}
+        placeholder="Escolha um mês"
+      />
+      {selectedMonth && (
+        <p className="mt-4">Você selecionou o mês: {selectedMonth}</p>
+      )}
+    </div>
   const currentYear = date.getFullYear();
 
 
@@ -105,7 +125,17 @@ export function ListTransactions() {
          <Tabs />
       </div>
       <main className="max-w-6xl mx-auto space-y-5">
-       <Combo />
+      <div className="p-8">
+        <h1>Selecione um mês</h1>
+        <MonthSelect 
+          onValueChange={handleMonthChange}
+          defaultValue={selectedMonth}
+          placeholder="Escolha um mês"
+        />
+        {selectedMonth && (
+        <p className="mt-4">Você selecionou o mês: {selectedMonth}</p>
+         )}
+        </div>
         <div className="flex items-center gap-3">
         
           {/* <h1 className="text-xl font-bold">Tags</h1> */}
