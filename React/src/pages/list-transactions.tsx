@@ -13,7 +13,7 @@ import { Pencil, Trash } from 'lucide-react';
 //ParamTransaction
 import {  useState } from 'react';
 import { useTransactionData } from '../hooks/useTransactionData';
-import MonthSelect from './components/MonthSelect';
+import { MonthSelect } from "../Components/MonthSelect";
 
 
 import { Carregando } from '../Components/carregando';
@@ -52,33 +52,31 @@ export function ListTransactions() {
   const [searchParams] = useSearchParams();
 
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
-  
+    
+ // const teste = 'teste';
 
   //const [transactions, setTransactions] = useState<Transaction[]>([]);
 
+  const date  = new Date();
+  let currentMonth = date.getMonth() +1;
+
+ 
   const handleMonthChange = (value: string) => {
-    setSelectedMonth(value);
-    console.log(`Mês selecionado: ${value}`);
+    //setSelectedMonth(value);
+   
+    currentMonth = parseInt(value);
+    //const { startDate, endDate} = getmonthDateRange(currentMonth, 2025);   
+    console.log(`Mês selecionado: ${currentMonth}`);
   };
 
 
-
   
-  const date  = new Date();
+  
+ 
+  //if (selectedMonth !== undefined) { 
+  // currentMonth = parseInt(selectedMonth);
+  //}
 
-  // const currentMonth = date.getMonth() +1;
-   const currentMonth = selectMonth;
-  <div className="p-8">
-      <h1>Selecione um mês</h1>
-      <MonthSelect 
-        onValueChange={handleMonthChange}
-        defaultValue={selectedMonth}
-        placeholder="Escolha um mês"
-      />
-      {selectedMonth && (
-        <p className="mt-4">Você selecionou o mês: {selectedMonth}</p>
-      )}
-    </div>
   const currentYear = date.getFullYear();
 
 
@@ -129,13 +127,12 @@ export function ListTransactions() {
         <h1>Selecione um mês</h1>
         <MonthSelect 
           onValueChange={handleMonthChange}
-          defaultValue={selectedMonth}
+          defaultValue={1}
           placeholder="Escolha um mês"
         />
-        {selectedMonth && (
-        <p className="mt-4">Você selecionou o mês: {selectedMonth}</p>
-         )}
-        </div>
+
+       </div>
+
         <div className="flex items-center gap-3">
         
           {/* <h1 className="text-xl font-bold">Tags</h1> */}
@@ -198,3 +195,5 @@ export function ListTransactions() {
     )
 
 }
+
+

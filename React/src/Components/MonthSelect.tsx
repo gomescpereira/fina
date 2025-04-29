@@ -1,10 +1,11 @@
 import React from 'react';
 import * as Select from '@radix-ui/react-select';
+//import { Select } from './ui/select';
 import { ChevronDown, ChevronUp, Check } from 'lucide-react';
 
 interface Month {
   value: string;
-  label: string;
+  label?: string;
 }
 
 interface MonthSelectProps {
@@ -14,13 +15,13 @@ interface MonthSelectProps {
   disabled?: boolean;
 }
 
-const MonthSelect: React.FC<MonthSelectProps> = ({
+export const MonthSelect: React.FC<MonthSelectProps> = ({
   onValueChange,
   defaultValue,
   placeholder = "Selecione um mês",
   disabled = false,
 }) => {
-  const months: Month[] = [
+   const months: Month[] = [
     { value: '01', label: 'Jan' },
     { value: '02', label: 'Fev' },
     { value: '03', label: 'Mar' },
@@ -34,6 +35,7 @@ const MonthSelect: React.FC<MonthSelectProps> = ({
     { value: '11', label: 'Nov' },
     { value: '12', label: 'Dez' }
   ];
+
 
   return (
     <Select.Root 
@@ -59,8 +61,8 @@ const MonthSelect: React.FC<MonthSelectProps> = ({
               <Select.Item
                 key={month.value}
                 value={month.value}
-                className="relative flex items-center h-8 px-6 py-2 text-sm rounded-md select-none hover:bg-blue-100 focus:bg-blue-100 focus:outline-none data-[highlighted]:bg-blue-100 data-[highlighted]:text-blue-900"
-              >
+                className="relative flex items-center h-8 px-6 py-2 text-sm rounded-md select-none hover:bg-blue-100 focus:bg-blue-100 focus:outline-none data-[highlighted]:bg-blue-100 data-[highlighted]:text-blue-900">
+
                 <Select.ItemText>{month.label}</Select.ItemText>
                 <Select.ItemIndicator className="absolute left-1 inline-flex items-center">
                   <Check className="w-4 h-4" />
@@ -78,4 +80,4 @@ const MonthSelect: React.FC<MonthSelectProps> = ({
   );
 };
 
-export default MonthSelect;
+
