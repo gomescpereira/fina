@@ -4,7 +4,7 @@ import { ResponsiveContainer, PieChart, Pie, Tooltip } from "recharts"
 
 interface PieProps {
   data: expanse[]
-  message: string;
+  message? : string;
 }
 
 interface expanse {
@@ -19,6 +19,7 @@ interface expanse {
 
  
 export const SimplePieCharts = (props:PieProps) => {
+    console.log(props.expanse);
     return ( 
         <ResponsiveContainer width="100%" height="100%" aspect={2}>
          <PieChart>

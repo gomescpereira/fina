@@ -1,103 +1,89 @@
-'use client';
-//import { Area, AreaChart, ResponsiveContainer} from 'recharts';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid,  Legend, ResponsiveContainer, Tooltip } from 'recharts';
+"use client"
 
+import { TrendingUp } from "lucide-react"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 
-interface TagResponse {
-  _id: string;
-  currencyday: Date;
-  dolarBuy: number;
-  dolarSell: number;
-  btcBuy: number;
-  btcSell: number;
-  eurBuy: number;
-  eurSell: number;
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
+
+export const description = "A line chart"
+
+const chartData = [
+  { month: "January", desktop: 186 },
+  { month: "February", desktop: 305 },
+  { month: "March", desktop: 237 },
+  { month: "April", desktop: 73 },
+  { month: "May", desktop: 209 },
+  { month: "June", desktop: 214 },
+]
+
+const chartConfig = {
+  desktop: {
+    label: "Desktop",
+    color: "var(--chart-1)",
+  },
+} satisfies ChartConfig
+
+export const ChartLineDefault = () => {
+  return (
+    <Card  >  
+      <CardHeader>
+        <CardTitle>Line Chart</CardTitle>
+        <CardDescription>January - June 2024</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <LineChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tick={{ fill: "var(--foreground)", fontWeight: 500, fontSize: 14 }}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Line
+              dataKey="desktop"
+              type="natural"
+              stroke="var(--color-desktop)"
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 leading-none font-medium">
+          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="text-muted-foreground leading-none">
+          Showing total visitors for the last 6 months
+        </div>
+      </CardFooter>
+    </Card>
+  )
 }
-
- export interface TagResponseProps {
-   data: TagResponse[]
- }
-
-// interface amostra {
-//   name: string
-//   uv: number
-//   pv: number
-//   amt: number
-// }
-
-// const teste: amostra[] = [
-//     {
-//       name: 'Page A',
-//       uv: 4000,
-//       pv: 2400,
-//       amt: 2400,
-//     },
-//     {
-//       name: 'Page B',
-//       uv: 3000,
-//       pv: 1398,
-//       amt: 2210,
-//     },
-//     {
-//       name: 'Page C',
-//       uv: 2000,
-//       pv: 9800,
-//       amt: 2290,
-//     },
-//     {
-//       name: 'Page D',
-//       uv: 2780,
-//       pv: 3908,
-//       amt: 2000,
-//     },
-//     {
-//       name: 'Page E',
-//       uv: 1890,
-//       pv: 4800,
-//       amt: 2181,
-//     },
-//     {
-//       name: 'Page F',
-//       uv: 2390,
-//       pv: 3800,
-//       amt: 2500,
-//     },
-//     {
-//       name: 'Page G',
-//       uv: 3490,
-//       pv: 4300,
-//       amt: 2100,
-//     },
-//   ];
-  
-
-export const LineChartComponent = (props:TagResponseProps) => {
-    return (
-      <ResponsiveContainer width="100%" height="100%" aspect={2}>
-        <LineChart 
-          data={props.data}
-          width={500}
-          height={300}
-          margin={
-            {
-              top:5,
-              right:30,
-              left:20,
-              bottom:5
-            }
-         }
-        >
-    <CartesianGrid strokeDasharray="4 1, 2" />
-    <XAxis dataKey="currencyday" />
-    <YAxis />
-    <Tooltip />
-    <Legend />
-    <Line type="monotone" dataKey="dolarBuy"  fill="#6b48ff" />
-    <Line type="monotone" dataKey="eurBuy" fill="#8b5cf6" />  
-    
-   </LineChart>
- </ResponsiveContainer> 
-);
-};
-
-// export default LineChartComponent;

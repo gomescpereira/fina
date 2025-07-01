@@ -7,7 +7,7 @@ import { CreateTransaction } from './pages/create-transaction';
 import { ListTransactions } from './pages/list-transactions';
 import { EditTransaction } from './pages/edit-transaction';
 import { ListFinancies } from './pages/list-financies';
-import { ChartFinancies } from './pages/chart-financies';
+import { ChartReports } from './pages/chart-reports';
 
 const router = createBrowserRouter([
    {
@@ -39,8 +39,8 @@ const router = createBrowserRouter([
     element: <ListFinancies />
   },
   {
-    path: '/chartfinancies/',
-    element: <ChartFinancies />
+    path: '/chartreports/',
+    element: <ChartReports />
   },
   ]);
 

@@ -1,0 +1,24 @@
+import { WebTracerProvider } from '@opentelemetry/sdk-trace-web';
+import { ConsoleSpanExporter, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base';
+import { registerInstrumentations } from '@opentelemetry/auto-instrumentations-web';
+import { FetchInstrumentation } from '@opentelemetry/instrumentation-fetch';
+import { XMLHttpRequestInstrumentation } from '@opentelemetry/instrumentation-xml-http-request';
+
+// Configuração do provedor de rastreamento
+const provider = new WebTracerProvider();
+
+// Exportador para exibir spans no console (substitua por um exportador real em produção)
+provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
+
+// Registra o provedor
+provider.register();
+
+// Instrumentações automáticas (ex.: Fetch e XMLHttpRequest)
+registerInstrumentations({
+  instrumentations: [
+    new FetchInstrumentation(),
+    new XMLHttpRequestInstrumentation(),
+  ],
+});
+
+console.log('OpenTelemetry configurado com sucesso!');

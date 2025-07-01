@@ -47,153 +47,120 @@ export interface TagResponse {
 //const API_URL = 'http://192.168.0.20:8080/v1';
 
 export function ListTransactions() {
-  const [selectedMonth, setSelectedMonth] = useState<string | undefined>();
-
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
-    
- // const teste = 'teste';
 
-  //const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const date = new Date();
+  const currentYear = date.getFullYear();
+  const [currentMonth, setCurrentMonth] = useState(date.getMonth() + 1);
 
-  const date  = new Date();
-  let currentMonth = date.getMonth() +1;
+  const { startDate, endDate } = getmonthDateRange(currentMonth, currentYear);
+  const { data: tagsResponse, isLoading, isFetching } = useTransactionData(startDate, endDate, page);
+  const { mutate: deleteItem } = useTransactionDeleteMutate();
 
- 
   const handleMonthChange = (value: string) => {
-    //setSelectedMonth(value);
-   
-    currentMonth = parseInt(value);
-    //const { startDate, endDate} = getmonthDateRange(currentMonth, 2025);   
-    console.log(`Mês selecionado: ${currentMonth}`);
+    setCurrentMonth(parseInt(value));
+    // Reset para página 1 quando mudar o mês
+    navigate('?page=1');
   };
 
+  const handleEdit = (id: string) => {
+    navigate(`/transactions/${id}`);
+  };
 
-  
-  
- 
-  //if (selectedMonth !== undefined) { 
-  // currentMonth = parseInt(selectedMonth);
-  //}
+  const handleDelete = (id: string) => {
+    deleteItem(id);
+  };
 
-  const currentYear = date.getFullYear();
-
-
-    
-  // const dataInicial : string = '2024-12-01';
-  // const dataFinal: string = '2024-12-31';
-
-  const { startDate, endDate} = getmonthDateRange(currentMonth, currentYear);
-  
-    const navigate = useNavigate();
-     
-    
-    const {data: tagsResponse, isLoading} = useTransactionData(startDate, endDate, page);
-
-    const {mutate: deleteItem} = useTransactionDeleteMutate();
-    
-    
-    //const field : string = '';
-    
-
-    //console.log({tagsResponse});
-    const handleDelete = (id: string) => {
-
-      deleteItem(id);
-      console.log(`Edit item with id: ${id}`);
-      // Adicione aqui a lógica para editar o item
-      
-    };
-       
-    const handleEdit = (id: number) => {
-      console.log(`Edit item with id: ${id}`);
-      // Adicione aqui a lógica para editar o item
-      navigate(`/transactions/${id}`);
-    };
-  
-        if (isLoading) {
-      return <Carregando />
-      
+  if (isLoading) {
+    return <Carregando />;
   }
-    return (
-      <div className="py-10 space-y-8">
-        <div>
-         <Header />
-         <Tabs />
-      </div>
-      <main className="max-w-6xl mx-auto space-y-5">
-      <div className="p-8">
-        <h1>Selecione um mês</h1>
-        <MonthSelect 
-          onValueChange={handleMonthChange}
-          defaultValue={1}
-          placeholder="Escolha um mês"
-        />
 
-       </div>
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <Tabs />
+      
+      <main className="flex-1 p-6 gap-4">
+        <div className="max-w-7xl mx-auto space-y-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl font-bold">Transações</h1>
+            <div className="flex items-center gap-2">
+              <MonthSelect
+                onValueChange={handleMonthChange}
+                defaultValue={String(currentMonth).padStart(2, '0')}
+              />
+              {isFetching && <Carregando />}
+            </div>
+          </div>
 
-        <div className="flex items-center gap-3">
-        
-          {/* <h1 className="text-xl font-bold">Tags</h1> */}
-         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead></TableHead>
-              <TableHead>Transações</TableHead>
-              <TableHead>Descrição das Transações</TableHead>
-              <TableHead>Pago</TableHead>
-              <TableHead></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {tagsResponse?.data.map((tag) => {
-              return (
-                <TableRow key={tag.id}>
-                  <TableCell></TableCell>
-                  <TableCell>
-                    <div className="flex flex-col gap-0.5">
-                      <span className="font-medium">{tag.title}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-zinc-300">
-                    {tag.amount}
-                  </TableCell>
-                  <TableCell className="text-zinc-300">
-                    {tag.pay ? "sim" : "não"}
-                  </TableCell>
-                  <TableCell className="text-right gap-2">
-                    
-                    <button 
-                    type="submit"
-                        onClick={() => handleEdit(parseInt(tag.id))} 
-                         className="gap-5">
-                        <Pencil className="bg-orange-400 text-orange-950 size-4 rounded"   />
-                    </button>
-                   <button 
-                    type="submit"
-                        onClick={() => handleDelete((tag.id))} 
-                        className="gap-10"  >
-                        <Trash className="size-4"/>
-                    </button> 
-                   
-                  </TableCell>
+          <div className="border rounded-lg p-4">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Título</TableHead>
+                  <TableHead>Valor</TableHead>
+                  <TableHead>Tipo</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Data</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
-              )
-            })}
-          </TableBody>
-        </Table>
+              </TableHeader>
+              <TableBody>
+                {tagsResponse?.data.map((transaction) => (
+                  <TableRow key={transaction.id}>
+                    <TableCell>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="font-medium">{transaction.title}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-zinc-300">
+                      {new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                      }).format(transaction.amount)}
+                    </TableCell>
+                    <TableCell className="text-zinc-300">
+                      {transaction.type === 1 ? 'Entrada' : 'Saída'}
+                    </TableCell>
+                    <TableCell className="text-zinc-300">
+                      {transaction.pay ? 'Pago' : 'Pendente'}
+                    </TableCell>
+                    <TableCell className="text-zinc-300">
+                      {new Date(transaction.paidOrReceivedAt).toLocaleDateString('pt-BR')}
+                    </TableCell>
+                    <TableCell className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(transaction.id)}
+                        className="p-2 hover:bg-zinc-800 rounded-md"
+                      >
+                        <Pencil className="size-4 text-zinc-300" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(transaction.id)}
+                        className="p-2 hover:bg-zinc-800 rounded-md"
+                      >
+                        <Trash className="size-4 text-red-300" />
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {tagsResponse && (
+            <Pagination
+              page={page}
+              pages={tagsResponse.totalPages}
+              items={tagsResponse.totalCount}
+            />
+          )}
         </div>
-        </main>
-
-     {tagsResponse && <Pagination  pages={tagsResponse.totalPages} 
-      items={tagsResponse.totalCount}
-      page={tagsResponse.currentPage} 
-     />}
-
+      </main>
     </div>
-    )
-
+  );
 }
 
 

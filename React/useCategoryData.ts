@@ -20,17 +20,11 @@ export interface TagResponse {
     userId: string
   }
 
-type Output = {
-	category: string,
-	amount: number
-}
 
-
-
-const fetchData = async (): Promise<Output>  => {
+const fetchData = async () => {
     const response =  await fetch(API_URL +'/categories?pageNumber=1&pageSize=15')
     const data = response.json()
-    return data;
+    return data
 }
    
 

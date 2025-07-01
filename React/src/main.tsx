@@ -1,9 +1,13 @@
+//import './otelo'; // Certifique-se de que o caminho está correto
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { App } from './app'
 import './index.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { initTelemetry } from './utils/telemetry'
+
+// Inicialize o OpenTelemetry
+initTelemetry();
 
 const client = new QueryClient();
 

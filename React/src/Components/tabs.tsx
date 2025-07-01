@@ -8,7 +8,10 @@ export function Tabs() {
           <ListVideo className="size-4" />
           Uploads
         </a>
-
+        <a href="/chartreports" className="py-1.5 px-3 text-zinc-300 inline-flex items-center text-sm gap-1.5 font-medium rounded-full border border-transparent hover:border-zinc-800">
+          <Code2 className="size-4" />
+          Dashboard
+        </a>
         <a href="/category" className="py-1.5 px-3 text-zinc-300 inline-flex items-center text-sm gap-1.5 font-medium rounded-full border border-transparent hover:border-zinc-800">
           <Tags className="size-4" />
           Categorias        </a>

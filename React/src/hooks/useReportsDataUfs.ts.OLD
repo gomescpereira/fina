@@ -1,0 +1,63 @@
+import { useQuery } from "@tanstack/react-query";
+
+
+
+const API_URL = 'https://apis.codante.io/senator-expenses/summary';
+
+
+
+
+
+// type ChartProps = {
+//   data: [
+//        { userId: string, category: string, year: number, expenses: number}[]
+//   ],
+//   message: string
+// };
+
+//   type UfChartProps = {
+//   data: { year: string, data: {uf: string , total_expenses: number}[]}[]
+// };
+
+
+interface Dados {
+    uf: string;
+    total_expenses: number;
+}
+
+//   type UfChartProps = {
+//   data: { year: string, data: {uf: string , total_expenses: number}[]}[]
+// };
+
+// interface  UfChartProps {
+//         data: {
+//             year: string;
+//             data: Dados[];
+//         }[]
+
+// }
+
+type UfChartProps = {
+    data: {year: string, data: { uf: string, totaç_expanses: number}[]}[]
+};
+
+
+
+const fetchData = async ()  => {
+  const  res = await fetch(`https://apis.codante.io/senator-expenses/summary/by-uf`);
+  const data = await res.json();
+  console.log(data[0]);
+  console.log("Ufs",data)
+  return data
+}
+
+
+export function useReportsDataUfs(){
+    const query = useQuery<UfChartProps>({
+      queryFn: fetchData,
+      queryKey: ['get-reports-ufs'],
+      refetchInterval: 60 * 5 * 1000
+    })
+
+    return query;
+}
