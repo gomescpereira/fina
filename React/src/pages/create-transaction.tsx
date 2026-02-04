@@ -37,7 +37,7 @@ export function CreateTransaction() {
    const [output, setOutput] = useState<CreateTransactionFormData>();
 
 
-
+   
 
     //const navigate = useNavigate();
     //onst { register, control, handleSubmit,// formState: { errors }
@@ -58,6 +58,33 @@ export function CreateTransaction() {
 
          }
       });
+    
+    
+
+     const handleN8n = async () => {
+       //e.preventDefault();
+
+      // URL de TESTE do n8n
+       const webhookUrl = 'SUA_URL_DE_TESTE_AQUI';
+
+       try {
+         const response = await fetch(webhookUrl, {
+         method: 'POST',
+         headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(output),
+     });
+
+      if (response.ok) {
+        alert('Dados enviados com sucesso!');
+        
+      }
+    } catch (error) {
+      console.error('Erro ao enviar:', error);
+    }
+  };
+
 
     async function createFormTransaction(data?: CreateTransactionFormData) {
         //queryClient.invalidateQueries({ queryKey: ['transaction']})
@@ -89,7 +116,7 @@ export function CreateTransaction() {
 
 
         setOutput(data);
-
+        handleN8n();
 
 
 
