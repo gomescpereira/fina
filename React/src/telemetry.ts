@@ -6,25 +6,34 @@ import { XMLHttpRequestInstrumentation } from '@opentelemetry/instrumentation-xm
 import { DocumentLoadInstrumentation } from '@opentelemetry/instrumentation-document-load';
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
-import { Resource } from '@opentelemetry/resources';
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+//import { Resource } from '@opentelemetry/resources';
+// import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
+import { resourceFromAttributes } from '@opentelemetry/resources';
+
 
 export const setupTelemetry = () => {
-  const resource = new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'react-app',
-    [SemanticResourceAttributes.SERVICE_VERSION]: '1.0.0',
-  });
+const resource = resourceFromAttributes({
+    [ATTR_SERVICE_NAME]: 'api-service',
+});
 
-  const provider = new WebTracerProvider({ resource });
+const anotherResource = resourceFromAttributes({
+    'service.version': '2.0.0',
+    'service.group': 'instrumentation-group'
+});
+const mergeResource = resource.merge(anotherResource);
+
+
+  const provider = new WebTracerProvider({ mergeResource });
   
   // Create and configure OTLP exporter
   const otlpExporter = new OTLPTraceExporter({
-    url: 'http://localhost:4318/v1/traces', // Update with your collector endpoint
+    url: 'http://192.168.0.20:4318/v1/traces', // Update with your collector endpoint
   });
   
   // Use BatchSpanProcessor for better performance
   const spanProcessor = new BatchSpanProcessor(otlpExporter);
-  provider.addSpanProcessor(spanProcessor);
+  //provider.addSpanProcessor(spanProcessor);
   
   // Register the provider
   provider.register({

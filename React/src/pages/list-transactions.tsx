@@ -14,7 +14,8 @@ import { Pencil, Trash } from 'lucide-react';
 import {  useState } from 'react';
 import { useTransactionData } from '../hooks/useTransactionData';
 import { MonthSelect } from "../Components/MonthSelect";
-
+import { YearSelect } from "../Components/YearSelect";
+import { trace } from '@opentelemetry/api';
 
 import { Carregando } from '../Components/carregando';
 import { getmonthDateRange } from '../utils/get-month-date-rangre';
@@ -43,6 +44,7 @@ export interface TagResponse {
 }
 
   
+const tracer = trace.getTracer('react-components');
 
 //const API_URL = 'http://192.168.0.20:8080/v1';
 
@@ -52,8 +54,10 @@ export function ListTransactions() {
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
 
   const date = new Date();
-  const currentYear = date.getFullYear();
+  const ano = date.getFullYear();
   const [currentMonth, setCurrentMonth] = useState(date.getMonth() + 1);
+  const [currentYear, setCurrentYear] = useState(ano);
+
 
   const { startDate, endDate } = getmonthDateRange(currentMonth, currentYear);
   const { data: tagsResponse, isLoading, isFetching } = useTransactionData(startDate, endDate, page);
@@ -62,6 +66,12 @@ export function ListTransactions() {
   const handleMonthChange = (value: string) => {
     setCurrentMonth(parseInt(value));
     // Reset para página 1 quando mudar o mês
+    navigate('?page=1');
+  };
+
+  const handleYearChange = (value: string) => {
+    setCurrentYear(parseInt(value));
+    // Reset para página 1 quando mudar o Ano
     navigate('?page=1');
   };
 
@@ -91,7 +101,11 @@ export function ListTransactions() {
                 onValueChange={handleMonthChange}
                 defaultValue={String(currentMonth).padStart(2, '0')}
               />
-              {isFetching && <Carregando />}
+              <YearSelect
+                onValueChange={handleYearChange}
+                defaultValue={String(currentYear)}
+              /> 
+              {isFetching && <Carregando />}  
             </div>
           </div>
 

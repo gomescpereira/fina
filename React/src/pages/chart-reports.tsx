@@ -6,7 +6,6 @@ import { Carregando } from '@/Components/carregando';
 import { BarCharts } from '@/Components/BarChart';
 //import { Divide } from 'lucide-react';
 import { BarHorizontal } from '@/Components/BarHorizontal';
-import React from 'react';
 import { Tabs } from '@/Components/tabs';
 import { ChartLineDefault } from '@/Components/LineChart';
 //import { Divide } from 'lucide-react';
