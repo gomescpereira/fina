@@ -61,11 +61,13 @@ export function CreateTransaction() {
     
     
 
-     const handleN8n = async () => {
+     const handleN8n = async (data: CreateTransactionFormData) => {
        //e.preventDefault();
 
       // URL de TESTE do n8n
-       const webhookUrl = 'SUA_URL_DE_TESTE_AQUI';
+       const webhookUrl = 'https://n8n.192.168.0.120.nip.io/webhook-test/f5932b19-c5fd-40d5-844a-5ca2528e9128'
+
+
 
        try {
          const response = await fetch(webhookUrl, {
@@ -73,7 +75,7 @@ export function CreateTransaction() {
          headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(output),
+        body: JSON.stringify(data),
      });
 
       if (response.ok) {
@@ -116,7 +118,7 @@ export function CreateTransaction() {
 
 
         setOutput(data);
-        handleN8n();
+        handleN8n(data);
 
 
 
