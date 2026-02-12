@@ -9,8 +9,8 @@ jobs:
     steps:
       - name: Obter o código do projeto
         uses: actions/checkout@v4name: CI-CD
-      name: CI-CD
-      - name: Autenticar no Docker Hun
+
+      - name: Autenticar no Docker Hub
               uses: docker/login-action@v2
               with:
                username: ${{ secrets.DOCKERHUB_USERNME }}
