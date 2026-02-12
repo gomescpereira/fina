@@ -1,0 +1,27 @@
+name: CI-CD
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter o código do projeto
+        uses: actions/checkout@v4name: CI-CD
+      name: CI-CD
+      - name: Autenticar no Docker Hun
+              uses: docker/login-action@v2
+              with:
+               username: ${{ secrets.DOCKERHUB_USERNME }}
+               password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+            -  name: Contrução de Imagem Docker
+               uses: docker/build-push-action@v6
+               with:
+                context: .
+                push: true
+                file: ./Dockerfile
+                tags: |
+                 gomesdocker/webreacotlls:latest
+                 gomesdocker/webreacotlls:v${{ github.run_number }}
