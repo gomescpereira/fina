@@ -15,8 +15,8 @@ jobs:
               with:
                username: ${{ secrets.DOCKERHUB_USERNME }}
                password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
-            -  name: Contrução de Imagem Docker
+
+      -  name: Contrução de Imagem Docker
                uses: docker/build-push-action@v6
                with:
                 context: .
