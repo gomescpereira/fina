@@ -19,9 +19,9 @@ jobs:
       -  name: Contrução de Imagem Docker
          uses: docker/build-push-action@v6
          with:
-           context: ./React
+           context: .
            push: true
-           file: ./Dockerfile
+           file: ./React/Dockerfile
            tags: |
             gomesdocker/webreacotlls:latest
             gomesdocker/webreacotlls:v${{ github.run_number }}
