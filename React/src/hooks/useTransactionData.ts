@@ -53,7 +53,7 @@ export function useTransactionData(dataInicial: string, dataFinal: string, page:
   return useQuery<TagResponse>({
     queryKey: ['transactions', { dataInicial, dataFinal, page }],
     queryFn: () => fetchData(dataInicial, dataFinal, page),
-    staleTime: 1000 * 60 * 5, // Considera os dados frescos por 5 minutos
+    staleTime: 1000 * 60 * 0.5, // Considera os dados frescos por 5 minutos
     placeholderData: (previousData) => previousData, // Mantém os dados anteriores enquanto carrega os novos
   });
 }

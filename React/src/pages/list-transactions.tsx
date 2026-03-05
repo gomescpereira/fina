@@ -109,7 +109,8 @@ export function ListTransactions() {
             </div>
           </div>
 
-          <div className="border rounded-lg p-4">
+          <div className="p-4">
+          
             <Table>
               <TableHeader>
                 <TableRow>
